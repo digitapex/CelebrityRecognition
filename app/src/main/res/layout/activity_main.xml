@@ -7,11 +7,18 @@
     tools:context="com.spitslide.celebrityrecognition.MainActivity">
 
     <TextView
+        android:id="@+id/tap_here"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:textSize="18sp"
         android:text="@string/tap_here"
         android:onClick="takePhoto"/>
+
+    <ImageView
+        android:id="@+id/photo_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </LinearLayout>
