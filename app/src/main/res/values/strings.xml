@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Celebrity Recognition</string>
     <string name="tap_here">Tap here to take a photo</string>
+    <string name="detect_face">Detect face</string>
+    <string name="new_photo">New photo</string>
 </resources>

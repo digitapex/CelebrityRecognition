@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String PHOTO = "photo";
     private static final java.lang.String EXT = ".jpg";
     private static final int REQUEST_TAKE_PHOTO = 1;
-    private File photo;
     private Uri photoURI;
 
     @Override
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void takePhoto(View view) throws IOException {
-        photo = File.createTempFile(PHOTO, EXT, getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+        File photo = File.createTempFile(PHOTO, EXT, getExternalFilesDir(Environment.DIRECTORY_PICTURES));
         photoURI = Uri.fromFile(photo);
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -45,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.tap_here).setVisibility(View.GONE);
             ImageView photoView = findViewById(R.id.photo_view);
             photoView.setVisibility(View.VISIBLE);
+            findViewById(R.id.detect_face).setVisibility(View.VISIBLE);
+            findViewById(R.id.new_photo).setVisibility(View.VISIBLE);
             Picasso.get()
                     .load(photoURI)
                     .fit()
