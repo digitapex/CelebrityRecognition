@@ -20,12 +20,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DetectionActivity extends AppCompatActivity {
 
     private MatchesAdapter matchesAdapter;
+    private String apiKey = BuildConfig.API_KEY;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detection);
-
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
