@@ -7,9 +7,11 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -50,7 +52,22 @@ public class MainActivity extends AppCompatActivity {
                     .load(photoURI)
                     .fit()
                     .centerInside()
-                    .into(photoView);
+                    .into(photoView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d("MY", "success");
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.d("MY", e.toString());
+                        }
+                    });
         }
+    }
+
+    public void detectFace(View view) {
+        Intent intent = new Intent(this, DetectionActivity.class);
+        startActivity(intent);
     }
 }
