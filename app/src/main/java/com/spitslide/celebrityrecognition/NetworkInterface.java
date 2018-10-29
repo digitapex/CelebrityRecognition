@@ -1,7 +1,7 @@
 package com.spitslide.celebrityrecognition;
 
 
-import com.spitslide.celebrityrecognition.qwant.Qwant;
+import com.spitslide.celebrityrecognition.contextualwebsearch.ContextualAPI;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -9,6 +9,6 @@ import retrofit2.http.Query;
 
 public interface NetworkInterface {
 
-    @GET("api/search/images")
-    Call<Qwant> getReponse(@Query("count") int count, @Query("q") String q, @Query("t") String t, @Query("uiv") int uiv);
+    @GET("api/Search/ImageSearchAPI")
+    Call<ContextualAPI> getReponse(@Query("q") String q, @Query("count") int count);
 }
