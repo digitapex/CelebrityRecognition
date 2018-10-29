@@ -16,6 +16,9 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:background="@android:color/black"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true"
         android:layout_alignBottom="@id/image_view"
+        android:visibility="gone"
         tools:text="John Doe" />
 </RelativeLayout>

@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.spitslide.celebrityrecognition.contextualwebsearch.ContextualAPI;
-import com.spitslide.celebrityrecognition.qwant.Qwant;
 
 import java.util.ArrayList;
 
@@ -31,8 +30,8 @@ public class DetectionActivity extends AppCompatActivity {
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        final ArrayList<String> imageUrls = new ArrayList<>();
-        matchesAdapter = new MatchesAdapter(imageUrls);
+        final ArrayList<Match> matches = new ArrayList<>();
+        matchesAdapter = new MatchesAdapter(matches);
         recyclerView.setAdapter(matchesAdapter);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -43,26 +42,29 @@ public class DetectionActivity extends AppCompatActivity {
 
         ArrayList<String> queries = new ArrayList<>();
         queries.add("dog");
-//        queries.add("cat");
-//        queries.add("duck");
-//        queries.add("chicken");
-//        queries.add("snake");
+        queries.add("cat");
+        queries.add("duck");
+        queries.add("chicken");
+        queries.add("snake");
 
         for (String query : queries) {
-            qwantCall(query);
+            contextualApiCall(query);
         }
 
 
 
     }
 
-    private void qwantCall(String query) {
+    private void contextualApiCall(final String query) {
         Call<ContextualAPI> call = networkInterface.getReponse(query, 1);
         call.enqueue(new Callback<ContextualAPI>() {
             @Override
             public void onResponse(Call<ContextualAPI> call, Response<ContextualAPI> response) {
                 String imageUrl = response.body().getValue().get(0).getUrl();
-                matchesAdapter.updateData(imageUrl);
+                Match match = new Match();
+                match.setUrl(imageUrl);
+                match.setName(query);
+                matchesAdapter.updateData(match);
             }
 
             @Override

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -15,18 +16,20 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesViewHolder> {
-    private final List<String> data;
+    private final List<Match> data;
 
-    public MatchesAdapter(List<String> data) {
+    public MatchesAdapter(List<Match> data) {
         this.data = data;
     }
 
     public class MatchesViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView imageView;
+        private TextView textView;
 
         public MatchesViewHolder(View view) {
             super(view);
+            textView = view.findViewById(R.id.name);
             imageView = view.findViewById(R.id.image_view);
         }
     }
@@ -39,14 +42,16 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MatchesViewHolder matchesViewHolder, int position) {
+    public void onBindViewHolder(@NonNull final MatchesViewHolder matchesViewHolder, final int position) {
         Picasso.get()
-                .load(data.get(position))
+                .load(data.get(position).getUrl())
                 .fit()
                 .centerInside()
                 .into(matchesViewHolder.imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        matchesViewHolder.textView.setVisibility(View.VISIBLE);
+                        matchesViewHolder.textView.setText(data.get(position).getName());
                         Log.d("MY", "success");
                     }
 
@@ -63,8 +68,8 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
         return data.size();
     }
 
-    public void updateData(String newImage) {
-        data.add(newImage);
+    public void updateData(Match match) {
+        data.add(match);
         notifyDataSetChanged();
     }
 }
