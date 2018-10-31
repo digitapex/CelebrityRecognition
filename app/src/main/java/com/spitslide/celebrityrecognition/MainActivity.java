@@ -1,6 +1,8 @@
 package com.spitslide.celebrityrecognition;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void detectFace(View view) {
         Intent intent = new Intent(this, DetectionActivity.class);
+        String photoFilePath = photo.getAbsolutePath();
+        intent.putExtra("photoFile", photoFilePath);
         startActivity(intent);
     }
 }
