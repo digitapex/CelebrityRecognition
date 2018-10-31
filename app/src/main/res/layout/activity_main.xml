@@ -26,20 +26,9 @@
         android:id="@+id/detect_face"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/new_photo"
+        android:layout_alignParentBottom="true"
         android:onClick="detectFace"
         android:text="@string/detect_face"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        android:visibility="visible" />
-
-    <Button
-        android:id="@+id/new_photo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:onClick="takePhoto"
-        android:text="@string/new_photo"
         android:textAllCaps="false"
         android:textSize="20sp"
         android:visibility="gone" />
