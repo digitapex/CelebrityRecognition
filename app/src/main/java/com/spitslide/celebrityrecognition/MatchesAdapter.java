@@ -43,6 +43,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
 
     @Override
     public void onBindViewHolder(@NonNull final MatchesViewHolder matchesViewHolder, final int position) {
+        final Match currentItem = data.get(position);
         Picasso.get()
                 .load(data.get(position).getUrl())
                 .fit()
@@ -51,7 +52,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
                     @Override
                     public void onSuccess() {
                         matchesViewHolder.textView.setVisibility(View.VISIBLE);
-                        matchesViewHolder.textView.setText(data.get(position).getName());
+                        matchesViewHolder.textView.setText(currentItem.getName() + ", " + currentItem.getValue());
                         Log.d("MY", "success");
                     }
 

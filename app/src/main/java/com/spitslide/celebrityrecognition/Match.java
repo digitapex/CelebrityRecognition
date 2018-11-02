@@ -4,6 +4,7 @@ package com.spitslide.celebrityrecognition;
 public class Match {
     private String url;
     private String name;
+    private String value;
 
     public String getUrl() {
         return url;
@@ -19,5 +20,13 @@ public class Match {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }

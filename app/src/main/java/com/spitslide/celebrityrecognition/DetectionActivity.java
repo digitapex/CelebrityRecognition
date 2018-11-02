@@ -13,6 +13,7 @@ import com.spitslide.celebrityrecognition.contextualwebsearch.ContextualAPI;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +103,9 @@ public class DetectionActivity extends AppCompatActivity {
     private void contextualApiCall(final List<Concept> matches) {
         for (int i = 0; i < 3; i++) {
             final String currentName = matches.get(i).name();
+            final float currentValue = matches.get(i).value();
+            DecimalFormat df = new DecimalFormat("##.##%");
+            final String currenValuePercent = df.format(currentValue);
             Log.d("MY", "current name" + currentName);
             Call<ContextualAPI> call = networkInterface.getReponse(currentName, 1);
             call.enqueue(new Callback<ContextualAPI>() {
@@ -112,6 +116,7 @@ public class DetectionActivity extends AppCompatActivity {
                     Match match = new Match();
                     match.setUrl(imageUrl);
                     match.setName(currentName);
+                    match.setValue(currenValuePercent);
                     matchesAdapter.updateData(match);
                 }
 
