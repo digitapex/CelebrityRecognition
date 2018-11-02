@@ -22,6 +22,7 @@ import clarifai2.api.ClarifaiResponse;
 import clarifai2.dto.input.ClarifaiInput;
 import clarifai2.dto.model.FaceConceptsModel;
 import clarifai2.dto.model.output.ClarifaiOutput;
+import clarifai2.dto.prediction.Concept;
 import clarifai2.dto.prediction.FaceConcepts;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,8 +57,8 @@ public class DetectionActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                String name = getClarifaiMatches();
-                contextualApiCall(name);
+                List<Concept> matches = getClarifaiMatches();
+                contextualApiCall(matches);
 
             }
         }.start();
@@ -77,7 +78,7 @@ public class DetectionActivity extends AppCompatActivity {
 
     }
 
-    private String getClarifaiMatches() {
+    private List<Concept> getClarifaiMatches() {
         String bitmapFilePath = getIntent().getExtras().getString("photoFile");
         Bitmap bitmap = BitmapFactory.decodeFile(bitmapFilePath);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -91,28 +92,34 @@ public class DetectionActivity extends AppCompatActivity {
                 .withInputs(ClarifaiInput.forImage(byteArray))
                 .executeSync();
         Log.d("MY", response.rawBody());
-        String name = response.get().get(0).data().get(0).concepts().get(0).name();
-        Log.d("MY", name);
-        return name;
+//        String name = response.get().get(0).data().get(0).concepts().get(0).name();
+        List<Concept> matches = response.get().get(0).data().get(0).concepts();
+//        Log.d("MY", name);
+        return matches;
 
     }
 
-    private void contextualApiCall(final String query) {
-        Call<ContextualAPI> call = networkInterface.getReponse(query, 1);
-        call.enqueue(new Callback<ContextualAPI>() {
-            @Override
-            public void onResponse(Call<ContextualAPI> call, Response<ContextualAPI> response) {
-                String imageUrl = response.body().getValue().get(0).getUrl();
-                Match match = new Match();
-                match.setUrl(imageUrl);
-                match.setName(query);
-                matchesAdapter.updateData(match);
-            }
+    private void contextualApiCall(final List<Concept> matches) {
+        for (int i = 0; i < 3; i++) {
+            final String currentName = matches.get(i).name();
+            Log.d("MY", "current name" + currentName);
+            Call<ContextualAPI> call = networkInterface.getReponse(currentName, 1);
+            call.enqueue(new Callback<ContextualAPI>() {
+                @Override
+                public void onResponse(Call<ContextualAPI> call, Response<ContextualAPI> response) {
 
-            @Override
-            public void onFailure(Call<ContextualAPI> call, Throwable t) {
+                    String imageUrl = response.body().getValue().get(0).getUrl();
+                    Match match = new Match();
+                    match.setUrl(imageUrl);
+                    match.setName(currentName);
+                    matchesAdapter.updateData(match);
+                }
 
-            }
-        });
+                @Override
+                public void onFailure(Call<ContextualAPI> call, Throwable t) {
+
+                }
+            });
+        }
     }
 }

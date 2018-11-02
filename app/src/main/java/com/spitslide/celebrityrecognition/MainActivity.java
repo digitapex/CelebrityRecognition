@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Uri photoURI;
     private ImageView photoView;
     private File photo;
+    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void detectFace(View view) {
         Intent intent = new Intent(this, DetectionActivity.class);
-        String photoFilePath = photo.getAbsolutePath();
+        String photoFilePath = photoFile.getAbsolutePath();
         intent.putExtra("photoFile", photoFilePath);
         startActivity(intent);
     }
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView photoView = findViewById(R.id.photo_view);
         photoView.setVisibility(View.VISIBLE);
         findViewById(R.id.detect_face).setVisibility(View.VISIBLE);
-        File photoFile = new File(photoPath);
+        photoFile = new File(photoPath);
         Picasso.get()
                 .load(photoFile)
                 .fit()

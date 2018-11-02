@@ -70,6 +70,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
 
     public void updateData(Match match) {
         data.add(match);
+        Log.d("MY", data.size() + "");
         notifyDataSetChanged();
     }
 }
