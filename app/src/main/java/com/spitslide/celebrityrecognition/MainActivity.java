@@ -1,7 +1,9 @@
 package com.spitslide.celebrityrecognition;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +33,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        handleShareIntent();
+    }
+
+    private void handleShareIntent() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                if (imageUri != null) {
+                    // to solve ENOENT and get the correct Uri: https://stackoverflow.com/a/7726604/9702500
+                    String[] projection = { MediaStore.Images.Media.DATA };
+                    Cursor cursor = managedQuery(imageUri, projection, null, null, null);
+                    startManagingCursor(cursor);
+                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+                    String imagepath = cursor.getString(column_index);
+                    insertPhotoIntoView(imagepath);
+                }
+            }
+        }
     }
 
     public void detectFace(View view) {
