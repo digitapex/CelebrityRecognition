@@ -34,6 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetectionActivity extends AppCompatActivity {
 
+    private static final int RESULTS_COUNT = 3;
     private MatchesAdapter matchesAdapter;
     private String apiKey = BuildConfig.API_KEY;
     private NetworkInterface networkInterface;
@@ -46,6 +47,10 @@ public class DetectionActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         final ArrayList<Match> matches = new ArrayList<>();
+        // we create empty items, so that latter we can update the exact position when asynchronously getting back results
+        for (int i = 0; i < RESULTS_COUNT; i++) {
+            matches.add(new Match());
+        }
         matchesAdapter = new MatchesAdapter(matches);
         recyclerView.setAdapter(matchesAdapter);
 
@@ -101,7 +106,8 @@ public class DetectionActivity extends AppCompatActivity {
     }
 
     private void contextualApiCall(final List<Concept> matches) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < RESULTS_COUNT; i++) {
+            final int position = i;
             final String currentName = matches.get(i).name();
             final float currentValue = matches.get(i).value();
             DecimalFormat df = new DecimalFormat("##.##%");
@@ -117,7 +123,7 @@ public class DetectionActivity extends AppCompatActivity {
                     match.setUrl(imageUrl);
                     match.setName(currentName);
                     match.setValue(currenValuePercent);
-                    matchesAdapter.updateData(match);
+                    matchesAdapter.updateData(position, match);
                 }
 
                 @Override

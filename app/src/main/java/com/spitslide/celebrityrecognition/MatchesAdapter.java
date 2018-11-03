@@ -45,7 +45,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
     public void onBindViewHolder(@NonNull final MatchesViewHolder matchesViewHolder, final int position) {
         final Match currentItem = data.get(position);
         Picasso.get()
-                .load(data.get(position).getUrl())
+                .load(currentItem.getUrl())
                 .fit()
                 .centerInside()
                 .into(matchesViewHolder.imageView, new Callback() {
@@ -69,9 +69,8 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
         return data.size();
     }
 
-    public void updateData(Match match) {
-        data.add(match);
-        Log.d("MY", data.size() + "");
+    public void updateData(int position, Match match) {
+        data.set(position, match);
         notifyDataSetChanged();
     }
 }
