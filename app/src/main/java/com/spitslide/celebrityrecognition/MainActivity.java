@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
+        if ((Intent.ACTION_SEND.equals(action) || Intent.ACTION_VIEW.equals(action)) && type != null) {
             if (type.startsWith("image/")) {
                 Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                 if (imageUri != null) {
@@ -52,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
                     cursor.moveToFirst();
                     String imagepath = cursor.getString(column_index);
                     insertPhotoIntoView(imagepath);
+                } else {
+                    // on the emulator the above Uri is null when "open with", but this works in any case
+                    if (intent.getData() != null) {
+                        String imagePath = intent.getData().getPath();
+                        insertPhotoIntoView(imagePath);
+                    }
                 }
             }
         }
