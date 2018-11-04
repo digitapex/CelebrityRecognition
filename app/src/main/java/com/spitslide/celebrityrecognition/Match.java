@@ -1,16 +1,18 @@
 package com.spitslide.celebrityrecognition;
 
 
+import java.util.List;
+
 public class Match {
-    private String url;
+    private List<String> url;
     private String name;
     private String value;
 
-    public String getUrl() {
+    public List<String> getUrls() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrls(List<String> url) {
         this.url = url;
     }
 

@@ -12,7 +12,6 @@ import android.util.Log;
 import com.spitslide.celebrityrecognition.contextualwebsearch.ContextualAPI;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DetectionActivity extends AppCompatActivity {
 
     private static final int RESULTS_COUNT = 3;
+    private static final int IMAGES_PER_PERSONS = 5;
     private MatchesAdapter matchesAdapter;
     private String apiKey = BuildConfig.API_KEY;
     private NetworkInterface networkInterface;
@@ -113,14 +113,18 @@ public class DetectionActivity extends AppCompatActivity {
             DecimalFormat df = new DecimalFormat("##.##%");
             final String currenValuePercent = df.format(currentValue);
             Log.d("MY", "current name" + currentName);
-            Call<ContextualAPI> call = networkInterface.getReponse(currentName, 1);
+            Call<ContextualAPI> call = networkInterface.getReponse(currentName, IMAGES_PER_PERSONS);
             call.enqueue(new Callback<ContextualAPI>() {
                 @Override
                 public void onResponse(Call<ContextualAPI> call, Response<ContextualAPI> response) {
 
-                    String imageUrl = response.body().getValue().get(0).getUrl();
+                    // we save several image links per person because some don't work and we might need to try a different link in the adapter
+                    List<String> imageUrls = new ArrayList<>();
+                    for (int i = 0; i < response.body().getValue().size(); i++) {
+                        imageUrls.add(response.body().getValue().get(i).getUrl());
+                    }
                     Match match = new Match();
-                    match.setUrl(imageUrl);
+                    match.setUrls(imageUrls);
                     match.setName(currentName);
                     match.setValue(currenValuePercent);
                     matchesAdapter.updateData(position, match);

@@ -43,9 +43,16 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
 
     @Override
     public void onBindViewHolder(@NonNull final MatchesViewHolder matchesViewHolder, final int position) {
+        insertImage(matchesViewHolder, position, 0);
+
+    }
+
+    private void insertImage(@NonNull final MatchesViewHolder matchesViewHolder, final int position, final int imageNumber) {
         final Match currentItem = data.get(position);
-        Picasso.get()
-                .load(currentItem.getUrl())
+        if (currentItem.getUrls() != null) {
+            String currentUrl = currentItem.getUrls().get(imageNumber);
+            Picasso.get()
+                .load(currentUrl)
                 .fit()
                 .centerInside()
                 .into(matchesViewHolder.imageView, new Callback() {
@@ -53,15 +60,20 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
                     public void onSuccess() {
                         matchesViewHolder.textView.setVisibility(View.VISIBLE);
                         matchesViewHolder.textView.setText(currentItem.getName() + ", " + currentItem.getValue());
-                        Log.d("MY", "success");
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.d("MY", e.toString());
+                        // try the next image link if the current one didn't work
+                        int currentImageNumber = imageNumber + 1;
+                        if(currentImageNumber < data.size()) {
+                            insertImage(matchesViewHolder, position, currentImageNumber);
+                        }
+
+
                     }
                 });
-
+    }
     }
 
     @Override
