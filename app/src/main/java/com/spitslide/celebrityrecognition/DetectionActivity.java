@@ -2,12 +2,15 @@ package com.spitslide.celebrityrecognition;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.spitslide.celebrityrecognition.contextualwebsearch.ContextualAPI;
 
@@ -44,6 +47,7 @@ public class DetectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detection);
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        TextView noResults = findViewById(R.id.no_results);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         final ArrayList<Match> matches = new ArrayList<>();
@@ -60,14 +64,7 @@ public class DetectionActivity extends AppCompatActivity {
                 .build();
         networkInterface = retrofit.create(NetworkInterface.class);
 
-        new Thread(){
-            @Override
-            public void run() {
-                List<Concept> matches = getClarifaiMatches();
-                contextualApiCall(matches);
-
-            }
-        }.start();
+        new ImagesFetchAsyncTask(recyclerView, noResults).execute();
 
 //        ArrayList<String> queries = new ArrayList<>();
 //        queries.add("dog");
@@ -99,8 +96,10 @@ public class DetectionActivity extends AppCompatActivity {
                 .executeSync();
         Log.d("MY", response.rawBody());
 //        String name = response.get().get(0).data().get(0).concepts().get(0).name();
-        List<Concept> matches = response.get().get(0).data().get(0).concepts();
-//        Log.d("MY", name);
+        List<Concept> matches = new ArrayList<>();
+        if(response.get().get(0).data().size() > 0) {
+            matches = response.get().get(0).data().get(0).concepts();
+        }
         return matches;
 
     }
@@ -135,6 +134,38 @@ public class DetectionActivity extends AppCompatActivity {
 
                 }
             });
+        }
+    }
+
+
+    private class ImagesFetchAsyncTask extends AsyncTask<String, String, String> {
+
+        private RecyclerView recyclerView;
+        private TextView noResults;
+
+        public ImagesFetchAsyncTask(RecyclerView recyclerView, TextView noResults) {
+            this.recyclerView = recyclerView;
+            this.noResults = noResults;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            List<Concept> matches = getClarifaiMatches();
+            String string = "";
+            if (matches.size() > 0) {
+                contextualApiCall(matches);
+            } else {
+                string = null;
+            }
+            return string;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result == null) {
+                recyclerView.setVisibility(View.GONE);
+                noResults.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
