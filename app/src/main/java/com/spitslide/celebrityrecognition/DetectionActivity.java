@@ -124,7 +124,8 @@ public class DetectionActivity extends AppCompatActivity {
                     }
                     Match match = new Match();
                     match.setUrls(imageUrls);
-                    match.setName(currentName);
+                    String titleCaseName = TitleCaseUtil.toTitleCase(currentName);
+                    match.setName(titleCaseName);
                     match.setValue(currenValuePercent);
                     matchesAdapter.updateData(position, match);
                 }
