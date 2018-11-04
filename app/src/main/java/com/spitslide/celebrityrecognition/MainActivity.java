@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView photoView = findViewById(R.id.photo_view);
         photoView.setVisibility(View.VISIBLE);
         findViewById(R.id.detect_face).setVisibility(View.VISIBLE);
+        findViewById(R.id.new_photo).setVisibility(View.VISIBLE);
         photoFile = new File(photoPath);
         Picasso.get()
                 .load(photoFile)
