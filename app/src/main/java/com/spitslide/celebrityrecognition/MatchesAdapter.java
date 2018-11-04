@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
@@ -26,11 +27,13 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
 
         private final ImageView imageView;
         private TextView textView;
+        private ProgressBar progressBar;
 
         public MatchesViewHolder(View view) {
             super(view);
             textView = view.findViewById(R.id.name);
             imageView = view.findViewById(R.id.image_view);
+            progressBar = view.findViewById(R.id.progress_bar);
         }
     }
 
@@ -58,6 +61,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchesV
                 .into(matchesViewHolder.imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        matchesViewHolder.progressBar.setVisibility(View.GONE);
                         matchesViewHolder.textView.setVisibility(View.VISIBLE);
                         matchesViewHolder.textView.setText(currentItem.getName() + ", " + currentItem.getValue());
                     }
